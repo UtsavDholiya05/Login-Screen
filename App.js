@@ -11,7 +11,7 @@ import {
   StatusBar,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import backend from "./backend.json"; 
+import backend from "./backend.json";
 
 // Email validation
 const isValidEmail = (email) => {
@@ -24,7 +24,29 @@ const LoginScreen = () => {
     password: "",
     secureTextEntry: true,
   });
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const { width, height } = useWindowDimensions();
+
+  // Live email validation
+  const handleEmailChange = (text) => {
+    setFormData((prev) => ({ ...prev, email: text }));
+    if (!text || isValidEmail(text)) {
+      setEmailError("");
+    } else {
+      setEmailError("Invalid email format");
+    }
+  };
+
+  // Live password validation
+  const handlePasswordChange = (text) => {
+    setFormData((prev) => ({ ...prev, password: text }));
+    if (!text || text.length >= 5) {
+      setPasswordError("");
+    } else {
+      setPasswordError("Password must be at least 5 characters");
+    }
+  };
 
   const handleLogin = () => {
     if (!formData.email || !formData.password) {
@@ -33,11 +55,15 @@ const LoginScreen = () => {
     }
 
     if (!isValidEmail(formData.email)) {
-      Alert.alert("Invalid Email", "Please enter a valid email address.");
+      setEmailError("Invalid email format");
       return;
     }
 
-    // Simulate backend login check
+    if (formData.password.length < 5) {
+      setPasswordError("Password must be at least 5 characters");
+      return;
+    }
+
     if (
       formData.email === backend.email &&
       formData.password === backend.password
@@ -46,6 +72,11 @@ const LoginScreen = () => {
         "Login Success",
         `Validation successful!\n\nEmail: ${formData.email}\nPassword: ${formData.password}`
       );
+      setFormData({
+        email: "",
+        password: "",
+        secureTextEntry: true,
+      });
     } else {
       Alert.alert("Login Failed", "Incorrect email or password.");
     }
@@ -110,7 +141,7 @@ const LoginScreen = () => {
           </Text>
           <TextInput
             value={formData.email}
-            onChangeText={(text) => setFormData((prev) => ({ ...prev, email: text }))}
+            onChangeText={handleEmailChange}
             placeholder="Enter your email"
             placeholderTextColor="#666"
             keyboardType="email-address"
@@ -125,6 +156,11 @@ const LoginScreen = () => {
               fontSize: 16,
             }}
           />
+          {emailError ? (
+            <Text style={{ color: "red", marginLeft: 15, marginBottom: 5 }}>
+              {emailError}
+            </Text>
+          ) : null}
 
           {/* Password */}
           <Text style={{
@@ -147,7 +183,7 @@ const LoginScreen = () => {
           }}>
             <TextInput
               value={formData.password}
-              onChangeText={(text) => setFormData((prev) => ({ ...prev, password: text }))}
+              onChangeText={handlePasswordChange}
               placeholder="Enter your password"
               placeholderTextColor="#666"
               secureTextEntry={formData.secureTextEntry}
@@ -173,6 +209,11 @@ const LoginScreen = () => {
               />
             </TouchableOpacity>
           </View>
+          {passwordError ? (
+            <Text style={{ color: "red", marginLeft: 15, marginBottom: 5 }}>
+              {passwordError}
+            </Text>
+          ) : null}
 
           {/* Forgot Password */}
           <TouchableOpacity style={{ alignSelf: "flex-end", marginVertical: 10 }}>
