@@ -11,7 +11,8 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
-  ActivityIndicator
+  ActivityIndicator,
+  StyleSheet
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import backend from "./backend.json";
@@ -69,7 +70,6 @@ const LoginScreen = () => {
     }
 
     setLoading(true);
-    // Simulate async login
     setTimeout(() => {
       setLoading(false);
       if (
@@ -92,64 +92,34 @@ const LoginScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFF1" }}>
+    <SafeAreaView style={styles.safeArea}>
       <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
+        style={styles.keyboardAvoiding}
       >
         <ScrollView
-          contentContainerStyle={{
-            paddingHorizontal: width * 0.05,
-            paddingTop: height * 0.03,
-            paddingBottom: 40,
-            alignItems: "center",
-          }}
+          contentContainerStyle={[
+            styles.scrollViewContent,
+            { paddingHorizontal: width * 0.05, paddingTop: height * 0.03 }
+          ]}
           keyboardShouldPersistTaps="handled"
         >
           {/* App Title */}
-          <Text style={{
-            fontSize: 32,
-            fontWeight: "600",
-            color: "#000",
-            textAlign: "center",
-            paddingTop: height * 0.15,
-            paddingBottom: height * 0.05,
-          }}>
+          <Text style={[styles.appTitle, { paddingTop: height * 0.15, paddingBottom: height * 0.05 }]}>
             EntryPoint
           </Text>
 
-          <View style={{
-            width: "95%",
-            maxWidth: 400,
-            backgroundColor: "#FFF",
-            borderRadius: 20,
-            padding: 20,
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.4,
-            shadowRadius: 4,
-            elevation: 5,
-          }}>
-            <Text style={{
-              fontSize: 32,
-              fontWeight: "bold",
-              textAlign: "center",
-              marginBottom: 5,
-            }}>
+          <View style={styles.card}>
+            <Text style={styles.welcomeText}>
               Welcome Back!
             </Text>
-            <Text style={{
-              fontSize: 14,
-              color: "#666",
-              textAlign: "center",
-              marginBottom: 20,
-            }}>
+            <Text style={styles.subtitleText}>
               Let's get started
             </Text>
 
             {/* Email */}
-            <Text style={{ marginLeft: 15, color: "#000", marginBottom: 5 }}>
+            <Text style={styles.labelText}>
               Email
             </Text>
             <TextInput
@@ -161,52 +131,26 @@ const LoginScreen = () => {
               placeholderTextColor="#666"
               keyboardType="email-address"
               autoCapitalize="none"
-              style={{
-                width: "100%",
-                padding: 15,
-                borderWidth: 1,
-                borderColor: "#000",
-                borderRadius: 40,
-                backgroundColor: "white",
-                fontSize: 16,
-              }}
+              style={styles.input}
             />
             {emailError ? (
-              <Text style={{ color: "red", marginLeft: 15, marginBottom: 5 }}>
+              <Text style={styles.errorText}>
                 {emailError}
               </Text>
             ) : null}
 
             {/* Password */}
-            <Text style={{
-              marginLeft: 15,
-              color: "#000",
-              marginBottom: 5,
-              marginTop: 10,
-            }}>
+            <Text style={[styles.labelText, styles.passwordLabel]}>
               Password
             </Text>
-            <View style={{
-              flexDirection: "row",
-              alignItems: "center",
-              borderWidth: 1,
-              borderColor: "#000",
-              borderRadius: 40,
-              backgroundColor: "white",
-              paddingRight: 15,
-              width: "100%",
-            }}>
+            <View style={styles.passwordContainer}>
               <TextInput
                 value={formData.password}
                 onChangeText={handlePasswordChange}
                 placeholder="Enter your password"
                 placeholderTextColor="#666"
                 secureTextEntry={formData.secureTextEntry}
-                style={{
-                  flex: 1,
-                  padding: 15,
-                  fontSize: 16,
-                }}
+                style={styles.passwordInput}
                 autoCapitalize="none"
               />
               <TouchableOpacity
@@ -225,17 +169,14 @@ const LoginScreen = () => {
               </TouchableOpacity>
             </View>
             {passwordError ? (
-              <Text style={{ color: "red", marginLeft: 15, marginBottom: 5 }}>
+              <Text style={styles.errorText}>
                 {passwordError}
               </Text>
             ) : null}
 
             {/* Forgot Password */}
-            <TouchableOpacity style={{ alignSelf: "flex-end", marginVertical: 10 }}>
-              <Text style={{
-                color: "#566D67",
-                textDecorationLine: "underline",
-              }}>
+            <TouchableOpacity style={styles.forgotPasswordBtn}>
+              <Text style={styles.forgotPasswordText}>
                 Forgot Password?
               </Text>
             </TouchableOpacity>
@@ -246,31 +187,20 @@ const LoginScreen = () => {
               accessibilityLabel="Login Button"
               onPress={handleLogin}
               disabled={loading}
-              style={{
-                backgroundColor: "#000",
-                padding: 15,
-                borderRadius: 40,
-                alignItems: "center",
-                width: "100%",
-                marginVertical: 10,
-              }}
+              style={styles.loginBtn}
             >
               {loading ? (
                 <ActivityIndicator color="#fff" />
               ) : (
-                <Text style={{ color: "white", fontSize: 18 }}>Login</Text>
+                <Text style={styles.loginBtnText}>Login</Text>
               )}
             </TouchableOpacity>
 
             {/* Signup Link */}
-            <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 10 }}>
-              <Text style={{ color: "#555" }}>Don't have an account? </Text>
+            <View style={styles.signupContainer}>
+              <Text style={styles.signupText}>Don't have an account? </Text>
               <TouchableOpacity>
-                <Text style={{
-                  color: "#566D67",
-                  fontWeight: "bold",
-                  textDecorationLine: "underline",
-                }}>
+                <Text style={styles.signupLink}>
                   Signup
                 </Text>
               </TouchableOpacity>
@@ -281,5 +211,120 @@ const LoginScreen = () => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#FFFFF1",
+  },
+  keyboardAvoiding: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    paddingBottom: 40,
+    alignItems: "center",
+  },
+  appTitle: {
+    fontSize: 32,
+    fontWeight: "600",
+    color: "#000",
+    textAlign: "center",
+    alignSelf: "center",
+  },
+  card: {
+    width: "95%",
+    maxWidth: 400,
+    backgroundColor: "#FFF",
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  welcomeText: {
+    fontSize: 32,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 5,
+  },
+  subtitleText: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  labelText: {
+    marginLeft: 15,
+    color: "#000",
+    marginBottom: 5,
+  },
+  passwordLabel: {
+    marginTop: 10,
+  },
+  input: {
+    width: "100%",
+    padding: 15,
+    borderWidth: 1,
+    borderColor: "#000",
+    borderRadius: 40,
+    backgroundColor: "white",
+    fontSize: 16,
+  },
+  errorText: {
+    color: "red",
+    marginLeft: 15,
+    marginBottom: 5,
+  },
+  passwordContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#000",
+    borderRadius: 40,
+    backgroundColor: "white",
+    paddingRight: 15,
+    width: "100%",
+  },
+  passwordInput: {
+    flex: 1,
+    padding: 15,
+    fontSize: 16,
+  },
+  forgotPasswordBtn: {
+    alignSelf: "flex-end",
+    marginVertical: 10,
+  },
+  forgotPasswordText: {
+    color: "#566D67",
+    textDecorationLine: "underline",
+  },
+  loginBtn: {
+    backgroundColor: "#000",
+    padding: 15,
+    borderRadius: 40,
+    alignItems: "center",
+    width: "100%",
+    marginVertical: 10,
+  },
+  loginBtnText: {
+    color: "white",
+    fontSize: 18,
+  },
+  signupContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  signupText: {
+    color: "#555",
+  },
+  signupLink: {
+    color: "#566D67",
+    fontWeight: "bold",
+    textDecorationLine: "underline",
+  },
+});
 
 export default LoginScreen;
