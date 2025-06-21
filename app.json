@@ -20,10 +20,17 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.utsavdholiya05.LoginScreen"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b9ee8e27-ea22-4624-be35-6aa1599527fe"
+      }
+    },
+    "owner": "utsavdholiya05"
   }
 }

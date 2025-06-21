@@ -148,7 +148,7 @@ const LoginScreen = () => {
                 value={formData.password}
                 onChangeText={handlePasswordChange}
                 placeholder="Enter your password"
-                placeholderTextColor="#666"
+                // placeholderTextColor="#666"
                 secureTextEntry={formData.secureTextEntry}
                 style={styles.passwordInput}
                 autoCapitalize="none"
